@@ -73,4 +73,8 @@ public class CategoryAction extends BaseAction implements ModelDriven<CategoryEn
         jsonList = categoryService.query();
         return "jsonList";
     }
+
+    public String testGitHub() {
+        return "success";
+    }
 }
