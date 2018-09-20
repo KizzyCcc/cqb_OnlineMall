@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <constant name="struts.objectFactory" value="spring" />
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+
+    <package name="userTest" namespace="/" extends="struts-default">
+        <action name="test" class="testAction" method="test1">
+            <result>welcome.jsp</result>
+        </action>
+        <action name="upload" class="uploadAction" method="upload">
+            <interceptor-ref name="defaultStack">
+                <param name="fileUpload.maximumSize">500000000</param>
+                <param name="fileUpload.allowedTypes">image/bmp,image/png,image/gif,image/jpeg,image/jpg</param>
+                <param name="fileUpload.allowedExtensions">.bmp,.png,.gif,.jpeg,.jpg</param>
+            </interceptor-ref>
+            <result>welcome.jsp</result>
+        </action>
+    </package>
+
+
+    <package name="send" namespace="/" extends="struts-default">
+        <action name="send_*_*" class="sendAction">
+            <result name="send">/WEB-INF/{1}/{2}.jsp</result>
+        </action>
+        <action name="send_login" class="sendAction" method="ulogin">
+            <result name="ulogin">ulogin.jsp</result>
+        </action>
+        <action name="send_welcome" class="sendAction" method="alogin">
+            <result name="alogin">/WEB-INF/welcome.jsp</result>
+        </action>
+        <action name="send2_user_*" class="sendAction" method="user_send">
+            <result name="send">/user/{1}.jsp</result>
+        </action>
+    </package>
+
+
+    <package name="category" namespace="/" extends="json-default">
+        <action name="category_*" class="categoryAction" method="{1}">
+            <result name="category_query" type="json">
+                <param name="root">pageMap</param>
+                <!--
+                <param name="excludeProperties">
+                    rows\[\d+\]\.account\.pass
+                </param>
+                -->
+            </result>
+            <result name="stream" type="stream">
+                <param name="inputName">inputStream</param>
+            </result>
+            <result name="jsonList" type="json">
+                <param name="root">jsonList</param>
+            </result>
+            <result name="success">welcome.jsp</result>
+            <allowed-methods>queryJoinAccount,deleteByIds,query,save,update</allowed-methods>
+        </action>
+    </package>
+
+    <package name="account" namespace="/" extends="json-default">
+        <action name="account_*" class="accountAction" method="{1}">
+            <result name="jsonList" type="json">
+                <param name="root">jsonList</param>
+            </result>
+            <result name="login">alogin.jsp</result>
+            <result name="welcome">/WEB-INF/welcome.jsp</result>
+            <allowed-methods>query,login,cancel</allowed-methods>
+        </action>
+    </package>
+    
+    <package name="product" namespace="/" extends="json-default">
+        <action name="product_*" class="productAction" method="{1}">
+            <result name="success">welcome.jsp</result>
+            <result name="jsonMap" type="json">
+                <param name="root">pageMap</param>
+                <param name="excludeProperties">rows\[\d+\]\.categoryEntity\.accountEntity</param>
+            </result>
+            <result name="stream" type="stream">
+                <param name="inputName">inputStream</param>
+            </result>
+            <result name="type">/type.jsp</result>
+            <result name="search">/search.jsp</result>
+            <allowed-methods>queryJoinCategory,deleteByIds,save,update,queryByType,queryByName</allowed-methods>
+        </action>
+    </package>
+
+    <package name="forder" namespace="/" extends="json-default">
+        <action name="forder_*" class="forderAction" method="{1}">
+            <result name="success">/user/confirm.jsp</result>
+            <result name="bank">/user/bank.jsp</result>
+            <result name="clear">/user/showCart.jsp</result>
+            <allowed-methods>test,clear</allowed-methods>
+        </action>
+    </package>
+
+    <package name="sorder"  namespace="/" extends="json-default">
+        <action name="sorder_*" class="sorderAction" method="{1}">
+            <result name="success">/user/showCart.jsp</result>
+            <result name="stream" type="stream">
+                <param name="inputName">inputStream</param>
+            </result>
+            <result name="jsonList" type="json"></result>
+            <allowed-methods>addSorder,updateSorder,querySale</allowed-methods>
+        </action>
+    </package>
+
+    <package name="user" namespace="/" extends="json-default">
+        <action name="user_*" class="userAction" method="{1}">
+            <result name="index">/test.jsp</result>
+            <result name="login" type="redirect">/ulogin.jsp</result>
+            <result name="goURL">
+                ${goURL}
+            </result>
+            <result name="update">/user/bank.jsp</result>
+            <result name="pay_success">/test.jsp</result>
+            <result name="pay_error">/user/recharge.jsp</result>
+            <result name="save">/test.jsp</result>
+            <result name="cancel">/test.jsp</result>
+            <result name="stream" type="stream">
+                <param name="inputName">inputStream</param>
+            </result>
+            <allowed-methods>login,update,pay,checkLogin,checkPhone,checkMail</allowed-methods>
+        </action>
+    </package>
+</struts>
